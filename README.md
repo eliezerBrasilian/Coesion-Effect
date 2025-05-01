@@ -2,7 +2,7 @@
 
 To distribute your aplication is so easy. You must have to build your app, finally create an .exe file. Lets dive into it.
 
-> you can also test it progamatically using command line.
+> you can also test it programatically using command line.
 
 ## Building you app
 
