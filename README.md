@@ -80,6 +80,8 @@ You must have installed on your machine:
   > download the option: wix314.exe
 
 Then install the app and procced with installation steps. After that you have to set the variable path.
+![wix_tollset_path](https://github.com/user-attachments/assets/d92cc6ec-fdd9-4eac-bb82-1c878fa66937)
+
 
 - Cryxie-cli (if you want to run native commands easily)
   https://cryxie.com/documentation/installation-guide
