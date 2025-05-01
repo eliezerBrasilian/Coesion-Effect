@@ -24,21 +24,11 @@ public class App extends Application {
         layout.setAlignment(Pos.CENTER);
         layout.setSpacing(10);
 
-        Button buttonIncrement = new Button("Increment");
-        buttonIncrement.setOnAction(e -> {
-            count++;
-            text.setText("Count: " + count);
-        });
-
-        Button buttonDecrement = new Button("Decrement");
-        buttonDecrement.setOnAction(e -> {
-            count--;
-            text.setText("Count: " + count);
-        });
-
-        layout.getChildren().add(text);
-        layout.getChildren().add(buttonIncrement);
-        layout.getChildren().add(buttonDecrement);
+        layout.getChildren()
+                .addAll(
+                        text,
+                        ButtonIncrement(),
+                        ButtonDecrement());
 
         Scene scene = new Scene(layout, 400, 300);
 
@@ -46,6 +36,26 @@ public class App extends Application {
 
         this.primaryStage.setTitle("Hello World");
         this.primaryStage.show();
+    }
+
+    @Component
+    public Button ButtonIncrement() {
+        Button button = new Button("Increment");
+        button.setOnAction(e -> {
+            count++;
+            text.setText("Count: " + count);
+        });
+        return button;
+    }
+
+    @Component
+    public Button ButtonDecrement() {
+        Button button = new Button("Decrement");
+        button.setOnAction(e -> {
+            count--;
+            text.setText("Count: " + count);
+        });
+        return button;
     }
 
     public static void main(String[] args) {
