@@ -14,6 +14,8 @@ public class App extends Application {
 
     int count = 0;
 
+    Text text = new Text("Count: " + count);
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
@@ -21,8 +23,6 @@ public class App extends Application {
         VBox layout = new VBox();
         layout.setAlignment(Pos.CENTER);
         layout.setSpacing(10);
-
-        Text text = new Text("Count: " + count);
 
         Button buttonIncrement = new Button("Increment");
         buttonIncrement.setOnAction(e -> {
