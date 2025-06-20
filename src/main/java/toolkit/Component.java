@@ -1,4 +1,4 @@
-package my_app;
+package toolkit;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
