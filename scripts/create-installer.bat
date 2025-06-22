@@ -3,11 +3,12 @@ echo Checking requirements to create the installer...
 
 REM Application configuration
 set "APP_NAME=MyApp"
-set "APP_VERSION=1.0"
+set "APP_VERSION=1.1"
 set "APP_VENDOR=Your Name"
 set "APP_COPYRIGHT=Copyright 2024"
 set "APP_DESCRIPTION=Your application description"
 set "APP_MAIN_CLASS=my_app.App"
+set "APP_ICON=..\src\main\resources\assets\app_ico.ico"
 
 REM Check if jpackage is available
 where jpackage >nul 2>nul
@@ -72,7 +73,7 @@ mkdir build\installer\bin
 mkdir ..\dist
 
 REM Copy JAR and JavaFX
-set "JAR_FILE=my_app-1.0-jar-with-dependencies.jar"
+set "JAR_FILE=my_app-%APP_VERSION%-jar-with-dependencies.jar"
 copy "..\target\%JAR_FILE%" build\installer\
 xcopy /E /I /Y "..\.java_fx\lib" "build\installer\lib"
 xcopy /E /I /Y "..\.java_fx\bin\*.dll" "build\installer\bin"
@@ -81,7 +82,7 @@ REM Create runtime image with JavaFX
 echo Creating runtime image...
 jlink ^
     --module-path "%JAVA_HOME%\jmods;build\installer\lib" ^
-    --add-modules javafx.controls,javafx.fxml,javafx.graphics ^
+    --add-modules javafx.controls,javafx.fxml,javafx.graphics,java.sql ^
     --output build\runtime
 
 REM Copy JavaFX DLLs to runtime
@@ -105,7 +106,8 @@ jpackage ^
     --java-options "-Djavafx.verbose=true" ^
     --java-options "-Dprism.verbose=true" ^
     --java-options "-Dprism.order=sw" ^
-    --java-options "-Djava.library.path=bin"
+    --java-options "-Djava.library.path=bin" ^
+    --icon "%APP_ICON%"
 
 if %errorlevel% neq 0 (
     echo.
@@ -134,7 +136,8 @@ jpackage ^
     --win-menu-group "%APP_NAME%" ^
     --win-shortcut ^
     --win-dir-chooser ^
-    --win-per-user-install
+    --win-per-user-install ^
+    --icon "%APP_ICON%"
 
 if %errorlevel% neq 0 (
     echo.

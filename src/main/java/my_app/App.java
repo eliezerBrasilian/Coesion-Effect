@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -21,6 +22,10 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
 
+        // icon on window
+        primaryStage.getIcons().add(new Image(
+                getClass().getResourceAsStream("/assets/app_ico_window_32_32.png")));
+
         VBox layout = new VBox();
         layout.setAlignment(Pos.CENTER);
         layout.setSpacing(10);
@@ -35,7 +40,7 @@ public class App extends Application {
 
         this.primaryStage.setScene(scene);
 
-        this.primaryStage.setTitle("Hello World");
+        this.primaryStage.setTitle("My App");
         this.primaryStage.show();
     }
 
