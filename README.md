@@ -1,10 +1,25 @@
-## Distributing your desktop application
+# Tutorial
 
-To distribute your aplication is so easy. You must have to build your app, finally create an .exe file. Lets dive into it.
+This tutorial will guide you through setting up your desktop application with everything ready to go.
 
-> you can also test it programatically using command line.
+## Getting the Application
 
-## Building you app
+Here you going to see the ways you can use to initialize your own project.
+
+There are two ways to initialize your own project:
+
+1. Download the app archive  
+   [Click here to download `my-coesion-app.rar`](https://github.com/eliezerBrasilian/Coesion-JavaFX/releases/download/v2/app_base.rar)
+
+2. Or, on Windows, open PowerShell and run:
+
+   ```powershell
+   Invoke-WebRequest -Uri "https://github.com/eliezerBrasilian/Coesion-JavaFX/releases/download/v2/app_base.rar" -OutFile "my-coesion-app.rar"
+   ```
+
+Then extract the archive and open the folder in your preferred IDE like VS Code. You're now ready to dive in!
+
+## Building your App
 
 ```bash
 cryxie build --mvn
@@ -16,11 +31,11 @@ Or you can use Maven directly
 mvn clean package
 ```
 
-## Distributing your app
+## Distributing Your App
 
 After you have builded it you can distribute easily on two ways
 
-1. Run the folloywing command with cryxie-cli
+1. With cryxie-cli
 
 ```bash
 cryxie dist-javafx-app --windows
@@ -36,12 +51,12 @@ cd scripts
 .\create-installer.bat
 ```
 
-## After that, your app will be generated into dist folder
+After that, your app will be generated in the `dist` folder:
 
-- Your .exe app will be inside dist/MyApp
-- Your msi will be inside dist/
+- The `.exe` will be inside `dist/MyApp`
+- The `.msi` installer will be inside `dist/`
 
-## Testing your app programatically
+## Testing Your App Programatically
 
 In order to test your app, you have two options.
 
@@ -61,27 +76,24 @@ cd scripts
 .\test-app.bat
 ```
 
-## Personalizing your app
+## Customizing Your App
 
-To personalize your app description, icon, version, vendor and etc... You must edit jpackage inside scripts/create-installer.bat
+To update metadata like description, icon, version, and vendor name, edit the `jpackage` section inside `scripts/create-installer.bat.`
 
-## Contribute now
+## Contribute
 
-If you desire, you can contribute with this open source project.
-Feel free to contribute and be part of the team
+Want to contribute?
+Feel free to open a PR and become part of the team behind this open-source project!
 
-## Warning
+## Requirements
 
-You must have installed on your machine:
+Make sure you have the following installed:
 
-- WiX Toolset (to generate your msi)
-  download link:
-  https://github.com/wixtoolset/wix3/releases/tag/wix3141rtm
-  > download the option: wix314.exe
+- WiX Toolset (required to generate MSI installers)
+  [Download WixToolset 3.14.1(wix314.exe)](https://github.com/wixtoolset/wix3/releases/tag/wix3141rtm)
 
 Then install the app and procced with installation steps. After that you have to set the variable path.
 ![wix_tollset_path](https://github.com/user-attachments/assets/d92cc6ec-fdd9-4eac-bb82-1c878fa66937)
-
 
 - Cryxie-cli (if you want to run native commands easily)
   https://cryxie.com/documentation/installation-guide

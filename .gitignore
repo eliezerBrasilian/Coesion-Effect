@@ -7,3 +7,4 @@ installer
 target
 dist
 *.log
+app_base/app.txt
