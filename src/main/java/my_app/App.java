@@ -22,10 +22,6 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
 
-        // icon on window
-        primaryStage.getIcons().add(new Image(
-                getClass().getResourceAsStream("/assets/app_ico_window_32_32.png")));
-
         VBox layout = new VBox();
         layout.setAlignment(Pos.CENTER);
         layout.setSpacing(10);
@@ -62,6 +58,12 @@ public class App extends Application {
             text.setText("Count: " + count);
         });
         return button;
+    }
+
+    void setup() {
+        // icon on window
+        primaryStage.getIcons().add(new Image(
+                getClass().getResourceAsStream("/assets/app_ico_window_32_32.png")));
     }
 
     public static void main(String[] args) {
