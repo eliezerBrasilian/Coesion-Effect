@@ -19,6 +19,8 @@ There are two ways to initialize your own project:
 
 Then extract the archive and open the folder in your preferred IDE like VS Code. You're now ready to dive in!
 
+[Coesion Effect comunnity on Telegram](https://t.me/coesion_effect)
+
 ## Building your App
 
 ```bash
