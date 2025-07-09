@@ -16,6 +16,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -125,6 +126,11 @@ public class App extends Application {
         // icon on window
         primaryStage.getIcons().add(new Image(
                 getClass().getResourceAsStream("/assets/app_ico_window_32_32.png")));
+
+        // registering font
+        Font.loadFont(
+                getClass().getResourceAsStream("/assets/fonts/Montserrat-Regular.ttf"), 14);
+
         // styles
         scene.getStylesheets().add(
                 getClass().getResource("./styles.css")

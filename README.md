@@ -9,7 +9,7 @@ Here you going to see the ways you can use to initialize your own project.
 There are two ways to initialize your own project:
 
 1. Download the app archive  
-   [Click here to download `my-coesion-app.rar`](https://github.com/eliezerBrasilian/Coesion-JavaFX/releases/download/v2/app_base.rar)
+   [Click here to download `my-coesion-app.rar`](https://github.com/eliezerBrasilian/Coesion-Effect/releases/download/v3/my_coesion_effect_dist_v3.zip)
 
 2. Or, on Windows, open PowerShell and run:
 
@@ -24,26 +24,20 @@ Then extract the archive and open the folder in your preferred IDE like VS Code.
 ## Building your App
 
 ```bash
-cryxie build --mvn
+mvn clean package
 ```
 
-Or you can use Maven directly
+Or you can use Cryxie Cli directly
 
 ```bash
-mvn clean package
+cryxie build --mvn
 ```
 
 ## Distributing Your App
 
 After you have builded it you can distribute easily on two ways
 
-1. With cryxie-cli
-
-```bash
-cryxie dist-javafx-app --windows
-```
-
-2. Or you can enter manually into scripts folder and run create-installer.bat
+1. Enter manually into scripts folder and run create-installer.bat
 
 ```bash
 cd scripts
@@ -51,6 +45,12 @@ cd scripts
 
 ```bash
 .\create-installer.bat
+```
+
+2. Or you can do with cryxie-cli
+
+```bash
+cryxie dist-javafx-app --windows
 ```
 
 After that, your app will be generated in the `dist` folder:
