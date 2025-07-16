@@ -9,12 +9,12 @@ Here you going to see the ways you can use to initialize your own project.
 There are two ways to initialize your own project:
 
 1. Download the app archive  
-   [Click here to download `my-coesion-app.rar`](https://github.com/eliezerBrasilian/Coesion-Effect/releases/download/v3/my_coesion_effect_dist_v3.zip)
+   [Click here to download `coesion_effect_v4.zip`](https://github.com/eliezerBrasilian/Coesion-Effect/releases/download/v4/coesion_effect_v4.zip)
 
 2. Or, on Windows, open PowerShell and run:
 
    ```powershell
-   Invoke-WebRequest -Uri "https://github.com/eliezerBrasilian/Coesion-JavaFX/releases/download/v2/app_base.rar" -OutFile "my-coesion-app.rar"
+   Invoke-WebRequest -Uri "https://github.com/eliezerBrasilian/Coesion-Effect/releases/download/v4/coesion_effect_v4.zip" -OutFile "my-coesion-app.rar"
    ```
 
 Then extract the archive and open the folder in your preferred IDE like VS Code. You're now ready to dive in!
