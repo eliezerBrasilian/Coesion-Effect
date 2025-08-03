@@ -104,11 +104,11 @@ public class App extends Application {
         Text description = new Text("Build your desktop app rapidly now.");
         description.getStyleClass().add("description");
 
-        Button btnJoinTelegram = new Button("Join on Telegram");
-        btnJoinTelegram.getStyleClass().add("btn-join-telegram");
+        Button btnJoinTelegram = new Button("Join on Github");
+        btnJoinTelegram.getStyleClass().add("btn-join");
         btnJoinTelegram.setOnAction(ev -> {
             try {
-                Desktop.getDesktop().browse(new URI("https://t.me/coesion_effect_community"));
+                Desktop.getDesktop().browse(new URI("https://github.com/eliezerBrasilian/Coesion-Effect"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -129,11 +129,11 @@ public class App extends Application {
 
         // registering font
         Font.loadFont(
-                getClass().getResourceAsStream("/assets/fonts/Montserrat-Regular.ttf"), 14);
+                getClass().getResourceAsStream("/assets/fonts/Montserrat-Regular.ttf"), 16);
 
         // styles
         scene.getStylesheets().add(
-                getClass().getResource("./styles.css")
+                getClass().getResource("/global_styles.css")
                         .toExternalForm());
 
         this.primaryStage.setTitle("My Coesion-App");
