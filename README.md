@@ -9,12 +9,12 @@ Here you going to see the ways you can use to initialize your own project.
 There are two ways to initialize your own project:
 
 1. Download the app archive  
-   [Click here to download `coesion_effect_v4.zip`](https://github.com/eliezerBrasilian/Coesion-Effect/releases/download/v4/coesion_effect_v4.zip)
+   [Click here to download `coesion_effect_app_v5.zip`](https://github.com/eliezerBrasilian/Coesion-Effect/releases/download/v5/my_coesion_effect_app_v5.zip)
 
 2. Or, on Windows, open PowerShell and run:
 
    ```powershell
-   Invoke-WebRequest -Uri "https://github.com/eliezerBrasilian/Coesion-Effect/releases/download/v4/coesion_effect_v4.zip" -OutFile "my-coesion-app.rar"
+   Invoke-WebRequest -Uri "https://github.com/eliezerBrasilian/Coesion-Effect/releases/download/v5/my_coesion_effect_app_v5.zip" -OutFile "coesion_effect_app_v5.zip"
    ```
 
 Then extract the archive and open the folder in your preferred IDE like VS Code. You're now ready to dive in!
@@ -89,13 +89,10 @@ Feel free to open a PR and become part of the team behind this open-source proje
 
 ## Requirements
 
-Make sure you have the following installed:
+Make sure you have the following installed for building purposes:
 
 - WiX Toolset (required to generate MSI installers)
   [Download WixToolset 3.14.1(wix314.exe)](https://github.com/wixtoolset/wix3/releases/tag/wix3141rtm)
 
 Then install the app and procced with installation steps. After that you have to set the variable path.
 ![wix_tollset_path](https://github.com/user-attachments/assets/d92cc6ec-fdd9-4eac-bb82-1c878fa66937)
-
-- Cryxie-cli (if you want to run native commands easily)
-  https://cryxie.com/documentation/installation-guide
