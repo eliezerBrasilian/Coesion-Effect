@@ -6,6 +6,9 @@ This tutorial will guide you through setting up your desktop application with ev
 
 Here you going to see the ways you can use to initialize your own project.
 
+See Video Tutorial
+[Watch Now](https://youtu.be/HJPHG8Bqq98)
+
 There are two ways to initialize your own project:
 
 1. Download the app archive  
