@@ -22,22 +22,45 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
-public class Column extends VBox implements DeclarativeContracts<Column> {
-
-    private double spacing = 10;
-    private Insets padding = Insets.EMPTY;
-    private Pos alignment = Pos.TOP_LEFT;
+public class Column extends VBox implements DeclarativeContracts<Column.InnerModifier> {
 
     public Column() {
         super();
+
+        setMinHeight(Region.USE_PREF_SIZE);
+        setPrefHeight(Region.USE_COMPUTED_SIZE);
+
+        // 🔑 Importante: impedir crescimento automático
+        setMaxHeight(Region.USE_PREF_SIZE);
+        VBox.setVgrow(this, Priority.NEVER);
     }
 
-    public Column(Consumer<Column> content) {
+    public Column(Runnable content) {
         FXNodeContext.add(this); // <---- Adiciona esta Column ao contexto pai
         FXNodeContext.push(this); // Agora, ela é o contexto para seus próprios filhos
-        content.accept(this);
+        content.run();
         FXNodeContext.pop();
+        setMinHeight(Region.USE_PREF_SIZE);
+        setPrefHeight(Region.USE_COMPUTED_SIZE);
+
+        // 🔑 Importante: impedir crescimento automático
+        setMaxHeight(Region.USE_PREF_SIZE);
+        VBox.setVgrow(this, Priority.NEVER);
+    }
+
+    public Column(Consumer<InnerModifier> content) {
+        FXNodeContext.add(this); // <---- Adiciona esta Column ao contexto pai
+        FXNodeContext.push(this); // Agora, ela é o contexto para seus próprios filhos
+        content.accept(new InnerModifier(this));
+        FXNodeContext.pop();
+        setMinHeight(Region.USE_PREF_SIZE);
+        setPrefHeight(Region.USE_COMPUTED_SIZE);
+
+        // 🔑 Importante: impedir crescimento automático
+        setMaxHeight(Region.USE_PREF_SIZE);
+        VBox.setVgrow(this, Priority.NEVER);
     }
 
     public Column(BiConsumer<Column, InnerModifier> withModifier) {
@@ -45,6 +68,12 @@ public class Column extends VBox implements DeclarativeContracts<Column> {
         FXNodeContext.push(this); // Agora, ela é o contexto para seus próprios filhos
         withModifier.accept(this, new InnerModifier(this));
         FXNodeContext.pop();
+        setMinHeight(Region.USE_PREF_SIZE);
+        setPrefHeight(Region.USE_COMPUTED_SIZE);
+
+        // 🔑 Importante: impedir crescimento automático
+        setMaxHeight(Region.USE_PREF_SIZE);
+        VBox.setVgrow(this, Priority.NEVER);
     }
 
     @Override
@@ -58,11 +87,31 @@ public class Column extends VBox implements DeclarativeContracts<Column> {
     }
 
     @Override
-    public void render(Consumer<Column> withModifier) {
+    public void render(Runnable content) {
         FXNodeContext.add(this); // <---- Adiciona esta Column ao contexto pai
         FXNodeContext.push(this); // Agora, ela é o contexto para seus próprios filhos
-        withModifier.accept(this);
+        content.run();
         FXNodeContext.pop();
+        setMinHeight(Region.USE_PREF_SIZE);
+        setPrefHeight(Region.USE_COMPUTED_SIZE);
+
+        // 🔑 Importante: impedir crescimento automático
+        setMaxHeight(Region.USE_PREF_SIZE);
+        VBox.setVgrow(this, Priority.NEVER);
+    }
+
+    @Override
+    public void render(Consumer<InnerModifier> withModifier) {
+        FXNodeContext.add(this); // <---- Adiciona esta Column ao contexto pai
+        FXNodeContext.push(this); // Agora, ela é o contexto para seus próprios filhos
+        withModifier.accept(new InnerModifier(this));
+        FXNodeContext.pop();
+        setMinHeight(Region.USE_PREF_SIZE);
+        setPrefHeight(Region.USE_COMPUTED_SIZE);
+
+        // 🔑 Importante: impedir crescimento automático
+        setMaxHeight(Region.USE_PREF_SIZE);
+        VBox.setVgrow(this, Priority.NEVER);
     }
 
     public void render(BiConsumer<Column, InnerModifier> withModifier) {
@@ -70,10 +119,20 @@ public class Column extends VBox implements DeclarativeContracts<Column> {
         FXNodeContext.push(this); // Agora, ela é o contexto para seus próprios filhos
         withModifier.accept(this, new InnerModifier(this));
         FXNodeContext.pop();
+        setMinHeight(Region.USE_PREF_SIZE);
+        setPrefHeight(Region.USE_COMPUTED_SIZE);
+
+        // 🔑 Importante: impedir crescimento automático
+        setMaxHeight(Region.USE_PREF_SIZE);
+        VBox.setVgrow(this, Priority.NEVER);
     }
 
     public <T> void each(ObservableList<T> items, Function<T, Node> builder, Supplier<Node> renderIfEmpty) {
         VBox container = new VBox();
+        container.setMinHeight(Region.USE_PREF_SIZE);
+        container.setPrefHeight(Region.USE_COMPUTED_SIZE);
+
+        VBox.setVgrow(container, Priority.NEVER);
         getChildren().add(container);
 
         Runnable renderList = () -> {
@@ -121,83 +180,87 @@ public class Column extends VBox implements DeclarativeContracts<Column> {
     }
 
     public void setSpacing_(double spacing) {
-        this.spacing = spacing;
+        super.setSpacing(spacing);
         requestLayout();
     }
 
     public void setPadding_(Insets padding) {
-        this.padding = padding;
+        super.setPadding(padding);
         requestLayout();
     }
 
     public void setAlignment_(Pos alignment) {
-        this.alignment = alignment;
+        super.setAlignment(alignment);
         requestLayout();
     }
 
-    @Override
-    protected void layoutChildren() {
-        double contentWidth = getWidth() - padding.getLeft() - padding.getRight();
-        double contentHeight = getHeight() - padding.getTop() - padding.getBottom();
+    // @Override
+    // protected void layoutChildren() {
+    // double contentWidth = getWidth() - padding.getLeft() - padding.getRight();
+    // double contentHeight = getHeight() - padding.getTop() - padding.getBottom();
 
-        // Altura total dos filhos
-        double totalHeight = 0;
-        for (Node child : getChildren()) {
-            totalHeight += child.prefHeight(-1);
-        }
-        totalHeight += (getChildren().size() - 1) * spacing;
+    // // Altura total dos filhos
+    // double totalHeight = 0;
+    // for (Node child : getChildren()) {
+    // totalHeight += child.prefHeight(-1);
+    // }
+    // totalHeight += (getChildren().size() - 1) * spacing;
 
-        // Offset inicial vertical
-        double yOffset;
-        if (alignment == Pos.BOTTOM_CENTER || alignment == Pos.BOTTOM_LEFT || alignment == Pos.BOTTOM_RIGHT) {
-            yOffset = contentHeight - totalHeight;
-        } else if (alignment == Pos.CENTER || alignment == Pos.CENTER_LEFT || alignment == Pos.CENTER_RIGHT) {
-            yOffset = (contentHeight - totalHeight) / 2;
-        } else {
-            yOffset = 0;
-        }
-        yOffset += padding.getTop();
+    // // Offset inicial vertical
+    // double yOffset;
+    // if (alignment == Pos.BOTTOM_CENTER || alignment == Pos.BOTTOM_LEFT ||
+    // alignment == Pos.BOTTOM_RIGHT) {
+    // yOffset = contentHeight - totalHeight;
+    // } else if (alignment == Pos.CENTER || alignment == Pos.CENTER_LEFT ||
+    // alignment == Pos.CENTER_RIGHT) {
+    // yOffset = (contentHeight - totalHeight) / 2;
+    // } else {
+    // yOffset = 0;
+    // }
+    // yOffset += padding.getTop();
 
-        // Layout de cada filho
-        for (Node child : getChildren()) {
-            double childWidth;
-            // Respeita fillMaxWidth (maxWidth == Double.MAX_VALUE)
-            if (child.maxWidth(Double.MAX_VALUE) == Double.MAX_VALUE) {
-                childWidth = contentWidth;
-            } else {
-                childWidth = Math.min(contentWidth, child.prefWidth(-1));
-            }
+    // // Layout de cada filho
+    // for (Node child : getChildren()) {
+    // double childWidth;
+    // // Respeita fillMaxWidth (maxWidth == Double.MAX_VALUE)
+    // if (child.maxWidth(Double.MAX_VALUE) == Double.MAX_VALUE) {
+    // childWidth = contentWidth;
+    // } else {
+    // childWidth = Math.min(contentWidth, child.prefWidth(-1));
+    // }
 
-            double childHeight = child.prefHeight(-1);
+    // double childHeight = child.prefHeight(-1);
 
-            Insets margin = VBox.getMargin(child);
-            double topMargin = (margin != null) ? margin.getTop() : 0;
+    // Insets margin = VBox.getMargin(child);
+    // double topMargin = (margin != null) ? margin.getTop() : 0;
 
-            double xOffset;
-            if (childWidth == contentWidth) {
-                // Preenche toda a largura -> começa do padding esquerdo
-                xOffset = padding.getLeft();
-            } else if (alignment == Pos.TOP_LEFT || alignment == Pos.CENTER_LEFT || alignment == Pos.BOTTOM_LEFT) {
-                xOffset = padding.getLeft();
-            } else if (alignment == Pos.TOP_RIGHT || alignment == Pos.CENTER_RIGHT || alignment == Pos.BOTTOM_RIGHT) {
-                xOffset = padding.getLeft() + (contentWidth - childWidth);
-            } else {
-                xOffset = padding.getLeft() + (contentWidth - childWidth) / 2;
-            }
+    // double xOffset;
+    // if (childWidth == contentWidth) {
+    // // Preenche toda a largura -> começa do padding esquerdo
+    // xOffset = padding.getLeft();
+    // } else if (alignment == Pos.TOP_LEFT || alignment == Pos.CENTER_LEFT ||
+    // alignment == Pos.BOTTOM_LEFT) {
+    // xOffset = padding.getLeft();
+    // } else if (alignment == Pos.TOP_RIGHT || alignment == Pos.CENTER_RIGHT ||
+    // alignment == Pos.BOTTOM_RIGHT) {
+    // xOffset = padding.getLeft() + (contentWidth - childWidth);
+    // } else {
+    // xOffset = padding.getLeft() + (contentWidth - childWidth) / 2;
+    // }
 
-            yOffset += topMargin; // aplica marginTop
-            child.resizeRelocate(xOffset, yOffset, childWidth, childHeight);
-            yOffset += childHeight + spacing;
-        }
-    }
+    // yOffset += topMargin; // aplica marginTop
+    // child.resizeRelocate(xOffset, yOffset, childWidth, childHeight);
+    // yOffset += childHeight + spacing;
+    // }
+    // }
 
     @Override
     protected double computePrefHeight(double width) {
-        double totalHeight = padding.getTop() + padding.getBottom();
+        double totalHeight = getPadding().getTop() + getPadding().getBottom();
         for (Node child : getChildren()) {
             totalHeight += child.prefHeight(-1);
         }
-        totalHeight += (getChildren().isEmpty() ? 0 : (getChildren().size() - 1) * spacing);
+        totalHeight += (getChildren().isEmpty() ? 0 : (getChildren().size() - 1) * getSpacing());
         return totalHeight;
     }
 
@@ -243,7 +306,7 @@ public class Column extends VBox implements DeclarativeContracts<Column> {
                 vbox.setMaxHeight(Double.MAX_VALUE);
                 VBox.setVgrow(vbox, Priority.ALWAYS);
             } else {
-                vbox.setMaxHeight(Region.USE_COMPUTED_SIZE);
+                vbox.setMaxHeight(Region.USE_PREF_SIZE);
                 VBox.setVgrow(vbox, Priority.NEVER);
             }
             return this;
@@ -288,40 +351,60 @@ public class Column extends VBox implements DeclarativeContracts<Column> {
         }
 
         public static class InnerStyles {
-            private final InnerModifier mod;
+            private final InnerModifier modifier;
             private CornerRadii cornerRadii = CornerRadii.EMPTY; // Armazena o raio dos cantos
+            private Paint borderColor = null;
 
             public InnerStyles(InnerModifier modifier) {
-                this.mod = modifier;
+                this.modifier = modifier;
             }
 
             public InnerStyles bgColor(Color color) {
-                mod.vbox.setBackground(new Background(
+                modifier.vbox.setBackground(new Background(
                         new BackgroundFill(color,
                                 cornerRadii, null)));
                 return this;
             }
 
-            public InnerStyles border(int radiusAll) {
+            public InnerStyles borderRadius(int radiusAll) {
                 this.cornerRadii = new CornerRadii(radiusAll);
 
-                mod.vbox.setBorder(new Border(
-                        new BorderStroke(
-                                null, // Color - você pode definir uma cor aqui (ex: Color.BLACK)
-                                BorderStrokeStyle.SOLID, // Estilo da borda
-                                cornerRadii, // Raio dos cantos
-                                new BorderWidths(1) // Largura da borda (1 pixel por padrão)
-                        )));
+                // Reaplica o background com cantos arredondados
+                BackgroundFill currentFill = modifier.vbox.getBackground() != null
+                        ? modifier.vbox.getBackground().getFills().get(0)
+                        : new BackgroundFill(Color.TRANSPARENT, cornerRadii, null);
 
-                // Se já houver um Background, reaplica com o novo CornerRadii
-                if (mod.vbox.getBackground() != null) {
-                    BackgroundFill currentFill = mod.vbox.getBackground().getFills().get(0);
-                    mod.vbox.setBackground(new Background(
-                            new BackgroundFill(
-                                    currentFill.getFill(),
+                modifier.vbox.setBackground(new Background(
+                        new BackgroundFill(
+                                currentFill.getFill(),
+                                cornerRadii,
+                                null)));
+
+                // Atualiza a borda usando a cor definida, se existir
+                if (borderColor != null) {
+                    modifier.vbox.setBorder(new Border(
+                            new BorderStroke(
+                                    borderColor,
+                                    BorderStrokeStyle.SOLID,
                                     cornerRadii,
-                                    null)));
+                                    new BorderWidths(1))));
+                } else {
+                    modifier.vbox.setBorder(Border.EMPTY);
                 }
+
+                return this;
+            }
+
+            public InnerStyles borderColor(Paint color) {
+                this.borderColor = color;
+
+                // Aplica a borda imediatamente caso já tenha um radius definido
+                modifier.vbox.setBorder(new Border(
+                        new BorderStroke(
+                                borderColor,
+                                BorderStrokeStyle.SOLID,
+                                cornerRadii,
+                                new BorderWidths(1))));
                 return this;
             }
         }

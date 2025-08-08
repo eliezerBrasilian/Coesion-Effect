@@ -3,22 +3,20 @@
   src: url("/assets/fonts/Montserrat-Regular.ttf");
 }
 
+@font-face {
+  font-family: "Montserrat Bold";
+  src: url("/assets/fonts/Montserrat-Bold.ttf");
+}
+
 * {
   -fx-font-family: "Montserrat";
   -fx-font-size: 18px;
-  -fx-fill: #fff;
-}
-
-.title {
-  -fx-font-size: 21px;
-  -fx-font-weight: bold;
 }
 
 .btn-join {
   -fx-background-color: #4bb9d8;
   -fx-text-fill: black;
   -fx-pref-width: 200px;
-  -fx-text-fill: #fff;
   -fx-background-radius: 8px;
 }
 

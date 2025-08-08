@@ -1,26 +1,25 @@
 package my_app;
 
-import javafx.animation.ScaleTransition;
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import toolkit.Component;
+import toolkit.declarative_components.Button_;
+import toolkit.declarative_components.Column;
+import toolkit.declarative_components.ImageView_;
+import toolkit.declarative_components.ImageView_.Shape;
+import toolkit.declarative_components.Image_;
+import toolkit.declarative_components.Text_;
+
 import java.awt.Desktop;
 import java.net.URI;
 
@@ -34,7 +33,7 @@ public class App extends Application {
 
         StackPane root = new StackPane();
 
-        root.setBackground(new Background(Wallpaper()));
+        root.setBackground(Wallpaper());
 
         root.getChildren().addAll(OverLayout());
 
@@ -45,15 +44,8 @@ public class App extends Application {
     }
 
     @Component
-    BackgroundImage Wallpaper() {
-        Image bgImage = new Image(getClass().getResourceAsStream("/assets/coesion-efffect-bg.jpg"));
-
-        return new BackgroundImage(
-                bgImage,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                new BackgroundSize(100, 100, true, true, true, true));
+    Background Wallpaper() {
+        return new Image_("/assets/coesion-efffect-bg.jpg").asBackground();
     }
 
     @Component
@@ -73,53 +65,58 @@ public class App extends Application {
 
     @Component
     ImageView Logo() {
-        ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/assets/coesion-effect-logo.png")));
-        logo.setFitWidth(150);
-        logo.setFitHeight(150);
 
-        ScaleTransition zoom = new ScaleTransition(Duration.seconds(1), logo);
+        return new ImageView_(new Image_("/assets/coesion-effect-logo.png"), (modifier) -> {
+            modifier
+                    .width(150)
+                    .height(150)
+                    .shape(Shape.Rectangle, 20)
+                    .animation(anim -> {
+                        anim.setFromX(1);
+                        anim.setFromY(1);
+                        anim.setToX(1.3);
+                        anim.setToY(1.3);
 
-        zoom.setFromX(1);
-        zoom.setFromY(1);
-        zoom.setToX(1.3);
-        zoom.setToY(1.3);
+                        anim.setAutoReverse(true);
+                        anim.setCycleCount(2);
+                        anim.setDuration(Duration.seconds(1));
+                    });
 
-        zoom.setAutoReverse(true);
-        zoom.setCycleCount(2);
-        zoom.play();
+        });
 
-        Rectangle clip = new Rectangle(150, 150);
-        clip.setArcWidth(20);
-        clip.setArcHeight(20);
-        logo.setClip(clip);
-        return logo;
     }
 
     @Component
     VBox RightContent() {
-        VBox container = new VBox();
-        container.setSpacing(5);
-        Text title = new Text("Coesion Effect");
-        title.getStyleClass().add("title");
-        Text description = new Text("Build your desktop app rapidly now.");
-        description.getStyleClass().add("description");
+        return new Column(() -> {
 
-        Button btnJoinTelegram = new Button("Join on Github");
-        btnJoinTelegram.getStyleClass().add("btn-join");
-        btnJoinTelegram.setOnAction(ev -> {
-            try {
-                Desktop.getDesktop().browse(new URI("https://github.com/eliezerBrasilian/Coesion-Effect"));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            new Text_("Coesion Effect", m -> {
+                m.fontSize(21)
+                        .styles()
+                        .color(Color.WHITE)
+                        .fontWeightBold();
+            });
+
+            new Text_("Build your desktop app rapidly now.", m -> {
+                m.styles().color(Color.WHITE);
+            });
+
+            new Button_("Join on Github", (btnModifier) -> {
+                btnModifier
+                        .marginTop(15)
+                        .onClick(() -> {
+                            try {
+                                Desktop.getDesktop()
+                                        .browse(new URI("https://github.com/eliezerBrasilian/Coesion-Effect"));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        })
+                        .styles()
+                        .useCssClass("btn-join");
+            });
         });
 
-        VBox.setMargin(btnJoinTelegram, new Insets(15, 0, 0, 0));
-
-        container.getChildren().addAll(
-                title,
-                description, btnJoinTelegram);
-        return container;
     }
 
     void setup(Scene scene) {

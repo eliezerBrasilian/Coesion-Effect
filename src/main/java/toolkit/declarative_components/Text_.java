@@ -3,10 +3,8 @@ package toolkit.declarative_components;
 import java.util.function.Consumer;
 
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -66,6 +64,21 @@ public class Text_ extends Text {
             public InnerStyles color(Color color) {
                 mod.node.setFill(color);
                 return this;
+            }
+
+            public InnerStyles fontWeight(String weight) {
+                String currentStyle = mod.node.getStyle();
+                mod.node.setStyle(
+                        (currentStyle != null ? currentStyle : "") + "-fx-font-weight: " + weight + ";");
+                return this;
+            }
+
+            public InnerStyles fontWeightBold() {
+                return fontWeight("bold");
+            }
+
+            public InnerStyles fontWeightNormal() {
+                return fontWeight("normal");
             }
         }
 

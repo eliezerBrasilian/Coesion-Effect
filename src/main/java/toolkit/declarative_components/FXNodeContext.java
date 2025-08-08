@@ -5,6 +5,7 @@ import java.util.Stack;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
+import toolkit.annotations.DeclarativeComponent;
 
 public class FXNodeContext {
     private static final Stack<Parent> context = new Stack<>();
@@ -23,6 +24,12 @@ public class FXNodeContext {
             if (parent instanceof Pane pane) {
                 pane.getChildren().add(node);
             }
+        }
+    }
+
+    public static void tryAutoAdd(Node node) {
+        if (node.getClass().isAnnotationPresent(DeclarativeComponent.class)) {
+            add(node);
         }
     }
 
