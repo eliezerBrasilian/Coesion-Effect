@@ -86,47 +86,6 @@ public class Column extends VBox implements DeclarativeContracts<Column.InnerMod
             }
     }
 
-    @Override
-    public void render(Runnable content) {
-        FXNodeContext.add(this); // <---- Adiciona esta Column ao contexto pai
-        FXNodeContext.push(this); // Agora, ela é o contexto para seus próprios filhos
-        content.run();
-        FXNodeContext.pop();
-        setMinHeight(Region.USE_PREF_SIZE);
-        setPrefHeight(Region.USE_COMPUTED_SIZE);
-
-        // 🔑 Importante: impedir crescimento automático
-        setMaxHeight(Region.USE_PREF_SIZE);
-        VBox.setVgrow(this, Priority.NEVER);
-    }
-
-    @Override
-    public void render(Consumer<InnerModifier> withModifier) {
-        FXNodeContext.add(this); // <---- Adiciona esta Column ao contexto pai
-        FXNodeContext.push(this); // Agora, ela é o contexto para seus próprios filhos
-        withModifier.accept(new InnerModifier(this));
-        FXNodeContext.pop();
-        setMinHeight(Region.USE_PREF_SIZE);
-        setPrefHeight(Region.USE_COMPUTED_SIZE);
-
-        // 🔑 Importante: impedir crescimento automático
-        setMaxHeight(Region.USE_PREF_SIZE);
-        VBox.setVgrow(this, Priority.NEVER);
-    }
-
-    public void render(BiConsumer<Column, InnerModifier> withModifier) {
-        FXNodeContext.add(this); // <---- Adiciona esta Column ao contexto pai
-        FXNodeContext.push(this); // Agora, ela é o contexto para seus próprios filhos
-        withModifier.accept(this, new InnerModifier(this));
-        FXNodeContext.pop();
-        setMinHeight(Region.USE_PREF_SIZE);
-        setPrefHeight(Region.USE_COMPUTED_SIZE);
-
-        // 🔑 Importante: impedir crescimento automático
-        setMaxHeight(Region.USE_PREF_SIZE);
-        VBox.setVgrow(this, Priority.NEVER);
-    }
-
     public <T> void each(ObservableList<T> items, Function<T, Node> builder, Supplier<Node> renderIfEmpty) {
         VBox container = new VBox();
         container.setMinHeight(Region.USE_PREF_SIZE);
@@ -290,35 +249,65 @@ public class Column extends VBox implements DeclarativeContracts<Column.InnerMod
             return this;
         }
 
-        public InnerModifier marginTop(double margin) {
-            VBox.setMargin(vbox, new Insets(margin, 0, 0, 0));
-
-            return this;
-        }
-
         public InnerModifier padding(double top, double right, double bottom, double left) {
             vbox.setPadding(new Insets(top, right, bottom, left));
             return this;
         }
 
-        public InnerModifier fillMaxHeigth(boolean b) {
-            if (b) {
+        public InnerModifier fillMaxHeight(boolean enable) {
+            if (enable) {
                 vbox.setMaxHeight(Double.MAX_VALUE);
                 VBox.setVgrow(vbox, Priority.ALWAYS);
+
+                // Aplica aos filhos já existentes
+                for (Node child : vbox.getChildren()) {
+                    VBox.setVgrow(child, Priority.ALWAYS);
+                    child.maxHeight(Double.MAX_VALUE);
+                }
+
+                // Observa novos filhos
+                vbox.getChildren().addListener((ListChangeListener<Node>) change -> {
+                    while (change.next()) {
+                        if (change.wasAdded()) {
+                            for (Node addedChild : change.getAddedSubList()) {
+                                VBox.setVgrow(addedChild, Priority.ALWAYS);
+                                addedChild.maxHeight(Double.MAX_VALUE);
+                            }
+                        }
+                    }
+                });
+
             } else {
                 vbox.setMaxHeight(Region.USE_PREF_SIZE);
                 VBox.setVgrow(vbox, Priority.NEVER);
             }
+
             return this;
         }
 
         public InnerModifier fillMaxWidth(boolean enable) {
             vbox.setFillWidth(enable);
+
             if (enable) {
+                // Aplica aos filhos já existentes
                 for (Node child : vbox.getChildren()) {
-                    child.maxWidth(Double.MAX_VALUE); // <-- ajusta todos os filhos
+                    VBox.setVgrow(child, Priority.ALWAYS);
+                    child.maxWidth(Double.MAX_VALUE);
                 }
+
+                // Observa novos filhos
+                vbox.getChildren().addListener((ListChangeListener<Node>) change -> {
+                    while (change.next()) {
+                        if (change.wasAdded()) {
+                            for (Node addedChild : change.getAddedSubList()) {
+                                VBox.setVgrow(addedChild, Priority.ALWAYS);
+                                addedChild.maxWidth(Double.MAX_VALUE);
+                            }
+                        }
+                    }
+                });
             }
+
             return this;
         }
 

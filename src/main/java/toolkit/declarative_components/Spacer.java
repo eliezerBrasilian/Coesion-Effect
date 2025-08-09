@@ -9,8 +9,8 @@ public class Spacer extends Region {
         super();
         FXNodeContext.add(this);
         // Por padrão sem tamanho
-        setMinSize(0, 0);
-        setPrefSize(0, 0);
+        setMinSize(0, 10);
+        setPrefSize(0, 10);
     }
 
     public Spacer(Consumer<InnerModifier> content) {

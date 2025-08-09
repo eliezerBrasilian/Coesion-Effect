@@ -19,7 +19,6 @@ import toolkit.declarative_components.ImageView_;
 import toolkit.declarative_components.ImageView_.Shape;
 import toolkit.declarative_components.Image_;
 import toolkit.declarative_components.Text_;
-
 import java.awt.Desktop;
 import java.net.URI;
 
@@ -32,7 +31,6 @@ public class App extends Application {
         this.primaryStage = primaryStage;
 
         StackPane root = new StackPane();
-
         root.setBackground(Wallpaper());
 
         root.getChildren().addAll(OverLayout());
