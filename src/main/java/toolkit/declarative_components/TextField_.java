@@ -8,6 +8,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import toolkit.declarative_components.modifiers.TextModifier;
+import toolkit.declarative_components.modifiers.TextStyles;
 import toolkit.theme.ThemeStyler;
 
 public class TextField_ extends TextField {
@@ -56,6 +60,10 @@ public class TextField_ extends TextField {
         ThemeStyler.textField(this);
     }
 
+    public InnerModifier modifier() {
+        return new InnerModifier(this);
+    }
+
     public void setfocusColor(String colorHex) {
         styles.put("-fx-focus-color", colorHex);
         styles.put("-fx-faint-focus-color", "transparent");
@@ -73,25 +81,20 @@ public class TextField_ extends TextField {
         updateStyles();
     }
 
-    public static class InnerModifier {
-        private final TextField_ node;
-
+    public static class InnerModifier extends TextModifier<TextField_> {
         public InnerModifier(TextField_ node) {
-            this.node = node;
+            super(node);
         }
 
-        public InnerModifier marginTop(double margin) {
-            VBox.setMargin(node, new Insets(margin, 0, 0, 0));
-            return this;
-        }
-
+        @Override
         public InnerModifier fontSize(double fontSize) {
             node.styles.put("-fx-font-size", fontSize + "px");
             node.updateStyles();
             return this;
         }
 
-        public InnerModifier font(javafx.scene.text.Font font) {
+        @Override
+        public InnerModifier font(Font font) {
             node.setFont(font);
             return this;
         }
@@ -101,30 +104,53 @@ public class TextField_ extends TextField {
             return this;
         }
 
+        @Override
         public InnerStyles styles() {
             return new InnerStyles(this);
         }
 
-        public static class InnerStyles {
-            private final InnerModifier mod;
-
+        public static class InnerStyles extends TextStyles<TextField_> {
             public InnerStyles(InnerModifier modifier) {
-                this.mod = modifier;
+                super(modifier);
+            }
+
+            @Override
+            public InnerStyles color(Color color) {
+                // TextField não tem método setTextFill, usa setStyle
+                modifier.getNode()
+                        .setStyle(modifier.getNode().getStyle() + "-fx-text-fill: " + colorToHex(color) + ";");
+                return this;
+            }
+
+            @Override
+            public InnerStyles fontWeight(String weight) {
+                // TextField não tem método setTextFill, usa setStyle
+                String currentStyle = modifier.getNode().getStyle();
+                modifier.getNode().setStyle(
+                        (currentStyle != null ? currentStyle : "") + "-fx-font-weight: " + weight + ";");
+                return this;
             }
 
             public InnerStyles focusColor(String colorHex) {
-                mod.node.setfocusColor(colorHex);
+                modifier.getNode().setfocusColor(colorHex);
                 return this;
             }
 
             public InnerStyles borderRadius(int radius) {
-                mod.node.setBorderRadius(radius);
+                modifier.getNode().setBorderRadius(radius);
                 return this;
             }
 
             public InnerStyles borderWidth(int width) {
-                mod.node.setBorderWidth(width);
+                modifier.getNode().setBorderWidth(width);
                 return this;
+            }
+
+            private String colorToHex(Color color) {
+                return String.format("#%02X%02X%02X",
+                        (int) (color.getRed() * 255),
+                        (int) (color.getGreen() * 255),
+                        (int) (color.getBlue() * 255));
             }
         }
     }

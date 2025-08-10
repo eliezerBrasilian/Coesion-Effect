@@ -10,7 +10,10 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import toolkit.declarative_components.modifiers.TextModifier;
+import toolkit.declarative_components.modifiers.TextStyles;
 
 public class ClickableText extends Label {
 
@@ -62,11 +65,9 @@ public class ClickableText extends Label {
         return new InnerModifier(this);
     }
 
-    public static class InnerModifier {
-        private final ClickableText node;
-
+    public static class InnerModifier extends TextModifier<ClickableText> {
         public InnerModifier(ClickableText node) {
-            this.node = node;
+            super(node);
         }
 
         public InnerModifier alignment(TextAlignment alignment) {
@@ -74,13 +75,20 @@ public class ClickableText extends Label {
             return this;
         }
 
+        @Override
         public InnerModifier fontSize(double fontSize) {
             node.setStyle(node.getStyle() + "-fx-font-size: " + fontSize + "px;");
             return this;
         }
 
+        @Override
+        public InnerModifier font(Font font) {
+            node.setFont(font);
+            return this;
+        }
+
         public InnerModifier onClick(Runnable runnable) {
-            onClick(runnable);
+            node.setOnMouseClicked(ev -> runnable.run());
             return this;
         }
 
@@ -90,35 +98,28 @@ public class ClickableText extends Label {
             return this;
         }
 
+        @Override
         public InnerStyles styles() {
             return new InnerStyles(this);
         }
 
-        public static class InnerStyles {
-            private final InnerModifier mod;
-
+        public static class InnerStyles extends TextStyles<ClickableText> {
             public InnerStyles(InnerModifier modifier) {
-                this.mod = modifier;
+                super(modifier);
             }
 
+            @Override
             public InnerStyles color(Color color) {
-                mod.node.setTextFill(color);
+                modifier.getNode().setTextFill(color);
                 return this;
             }
 
+            @Override
             public InnerStyles fontWeight(String weight) {
-                String currentStyle = mod.node.getStyle();
-                mod.node.setStyle(
+                String currentStyle = modifier.getNode().getStyle();
+                modifier.getNode().setStyle(
                         (currentStyle != null ? currentStyle : "") + "-fx-font-weight: " + weight + ";");
                 return this;
-            }
-
-            public InnerStyles fontWeightBold() {
-                return fontWeight("bold");
-            }
-
-            public InnerStyles fontWeightNormal() {
-                return fontWeight("normal");
             }
         }
     }
