@@ -3,6 +3,22 @@
   "configurations": [
     {
       "type": "java",
+      "name": "FontExample",
+      "request": "launch",
+      "mainClass": "toolkit.theme.FontExample",
+      "projectName": "my_app",
+      "vmArgs": "--module-path ./.java_fx/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics -Dprism.order=sw -Dprism.verbose=true"
+    },
+    {
+      "type": "java",
+      "name": "ThemeExample",
+      "request": "launch",
+      "mainClass": "toolkit.theme.ThemeExample",
+      "projectName": "my_app",
+      "vmArgs": "--module-path ./.java_fx/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics -Dprism.order=sw -Dprism.verbose=true"
+    },
+    {
+      "type": "java",
       "name": "App",
       "request": "launch",
       "mainClass": "my_app.App",

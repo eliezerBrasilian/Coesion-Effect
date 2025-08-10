@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import toolkit.theme.ThemeStyler;
 
 public class TextField_ extends TextField {
     private final Map<String, String> styles = new HashMap<>();
@@ -51,6 +52,10 @@ public class TextField_ extends TextField {
         setBorderRadius(3);
     }
 
+    public void applyTheme() {
+        ThemeStyler.textField(this);
+    }
+
     public void setfocusColor(String colorHex) {
         styles.put("-fx-focus-color", colorHex);
         styles.put("-fx-faint-focus-color", "transparent");
@@ -83,6 +88,16 @@ public class TextField_ extends TextField {
         public InnerModifier fontSize(double fontSize) {
             node.styles.put("-fx-font-size", fontSize + "px");
             node.updateStyles();
+            return this;
+        }
+
+        public InnerModifier font(javafx.scene.text.Font font) {
+            node.setFont(font);
+            return this;
+        }
+
+        public InnerModifier applyTheme() {
+            node.applyTheme();
             return this;
         }
 

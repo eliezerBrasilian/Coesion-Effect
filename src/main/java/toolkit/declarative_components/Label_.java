@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
+import toolkit.theme.ThemeStyler;
 
 public class Label_ extends Label {
     public Label_(String value) {
@@ -48,6 +49,36 @@ public class Label_ extends Label {
             return this;
         }
 
+        public InnerModifier font(javafx.scene.text.Font font) {
+            node.setFont(font);
+            return this;
+        }
+
+        public InnerModifier h1() {
+            ThemeStyler.h1(node);
+            return this;
+        }
+
+        public InnerModifier h2() {
+            ThemeStyler.h2(node);
+            return this;
+        }
+
+        public InnerModifier h3() {
+            ThemeStyler.h3(node);
+            return this;
+        }
+
+        public InnerModifier body() {
+            ThemeStyler.body(node);
+            return this;
+        }
+
+        public InnerModifier caption() {
+            ThemeStyler.caption(node);
+            return this;
+        }
+
         public InnerStyles styles() {
             return new InnerStyles(this);
         }
@@ -61,6 +92,36 @@ public class Label_ extends Label {
 
             public InnerStyles color(Color color) {
                 mod.node.setTextFill(color);
+                return this;
+            }
+
+            public InnerStyles primary() {
+                ThemeStyler.primary(mod.node);
+                return this;
+            }
+
+            public InnerStyles secondary() {
+                ThemeStyler.secondary(mod.node);
+                return this;
+            }
+
+            public InnerStyles error() {
+                ThemeStyler.error(mod.node);
+                return this;
+            }
+
+            public InnerStyles onBackground() {
+                ThemeStyler.onBackground(mod.node);
+                return this;
+            }
+
+            public InnerStyles onSurface() {
+                ThemeStyler.onSurface(mod.node);
+                return this;
+            }
+
+            public InnerStyles disabled() {
+                ThemeStyler.disabled(mod.node);
                 return this;
             }
         }

@@ -64,24 +64,25 @@ public class App extends Application {
     @Component
     ImageView Logo() {
 
-        return new ImageView_(new Image_("/assets/coesion-effect-logo.png"), (modifier) -> {
-            modifier
-                    .width(150)
-                    .height(150)
-                    .shape(Shape.Rectangle, 20)
-                    .animation(anim -> {
-                        anim.setFromX(1);
-                        anim.setFromY(1);
-                        anim.setToX(1.3);
-                        anim.setToY(1.3);
+        return new ImageView_(
+                new Image_("/assets/coesion-effect-logo.png"),
+                modifier -> {
+                    modifier
+                            .width(150)
+                            .height(150)
+                            .shape(Shape.Rectangle, 20)
+                            .animation(anim -> {
+                                anim.setFromX(1);
+                                anim.setFromY(1);
+                                anim.setToX(1.3);
+                                anim.setToY(1.3);
 
-                        anim.setAutoReverse(true);
-                        anim.setCycleCount(2);
-                        anim.setDuration(Duration.seconds(1));
-                    });
+                                anim.setAutoReverse(true);
+                                anim.setCycleCount(2);
+                                anim.setDuration(Duration.seconds(1));
+                            });
 
-        });
-
+                });
     }
 
     @Component

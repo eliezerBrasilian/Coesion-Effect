@@ -95,6 +95,11 @@ public class Button_ extends Button {
             return this;
         }
 
+        public InnerModifier font(javafx.scene.text.Font font) {
+            node.setFont(font);
+            return this;
+        }
+
         public InnerStyles styles() {
             return new InnerStyles(this);
         }
