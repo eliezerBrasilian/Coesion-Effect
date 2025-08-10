@@ -19,18 +19,23 @@ import toolkit.declarative_components.ImageView_;
 import toolkit.declarative_components.ImageView_.Shape;
 import toolkit.declarative_components.Image_;
 import toolkit.declarative_components.Text_;
+import toolkit.theme.MaterialTheme;
+import toolkit.theme.ThemeStyler;
+
 import java.awt.Desktop;
 import java.net.URI;
 
 public class App extends Application {
 
     Stage primaryStage;
+    MaterialTheme theme = MaterialTheme.getInstance();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
 
         StackPane root = new StackPane();
+
         root.setBackground(Wallpaper());
 
         root.getChildren().addAll(OverLayout());
@@ -63,7 +68,6 @@ public class App extends Application {
 
     @Component
     ImageView Logo() {
-
         return new ImageView_(
                 new Image_("/assets/coesion-effect-logo.png"),
                 modifier -> {
@@ -90,14 +94,16 @@ public class App extends Application {
         return new Column(() -> {
 
             new Text_("Coesion Effect", m -> {
-                m.fontSize(21)
+                m.fontSize(27)
+                        .font(theme.getCustomFont("Montserrat-Light"))
                         .styles()
                         .color(Color.WHITE)
                         .fontWeightBold();
             });
 
             new Text_("Build your desktop app rapidly now.", m -> {
-                m.styles().color(Color.WHITE);
+                m.fontSize(18)
+                        .styles().color(Color.WHITE);
             });
 
             new Button_("Join on Github", (btnModifier) -> {
@@ -123,9 +129,8 @@ public class App extends Application {
         primaryStage.getIcons().add(new Image(
                 getClass().getResourceAsStream("/assets/app_ico_window_32_32.png")));
 
-        // registering font
-        Font.loadFont(
-                getClass().getResourceAsStream("/assets/fonts/Montserrat-Regular.ttf"), 16);
+        // load fonts
+        theme.loadAllFonts();
 
         // styles
         scene.getStylesheets().add(

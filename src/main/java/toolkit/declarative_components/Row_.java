@@ -19,6 +19,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import toolkit.declarative_components.modifiers.LayoutModifier;
+import toolkit.declarative_components.modifiers.LayoutStyles;
 
 public class Row_ extends HBox implements DeclarativeContracts<Row_.InnerModifier> {
 
@@ -83,95 +86,104 @@ public class Row_ extends HBox implements DeclarativeContracts<Row_.InnerModifie
         requestLayout();
     }
 
-    public static class InnerModifier {
-        private final Row_ container;
+    public static class InnerModifier extends LayoutModifier<Row_> {
 
         public InnerModifier(Row_ container) {
-            this.container = container;
+            super(container);
         }
 
+        @Override
         public InnerModifier alignment(Pos alignment) {
-            container.setAlignment_(alignment);
+            node.setAlignment_(alignment);
             return this;
         }
 
         public InnerModifier spaceBetween() {
-            container.setAlignment(Pos.CENTER_LEFT);
+            node.setAlignment(Pos.CENTER_LEFT);
 
             // Adiciona um listener para quando elementos forem adicionados
-            container.getChildren().addListener((ListChangeListener<Node>) change -> {
+            node.getChildren().addListener((ListChangeListener<Node>) change -> {
                 while (change.next()) {
-                    if (change.wasAdded() && container.getChildren().size() == 2) {
+                    if (change.wasAdded() && node.getChildren().size() == 2) {
                         Region spacer = new Region();
                         HBox.setHgrow(spacer, Priority.ALWAYS);
-                        container.getChildren().add(1, spacer);
+                        node.getChildren().add(1, spacer);
                     }
                 }
             });
             return this;
         }
 
+        @Override
         public InnerModifier spacing(double spacing) {
-            container.setSpacing_(spacing);
+            node.setSpacing_(spacing);
             return this;
         }
 
+        @Override
         public InnerModifier padding(double all) {
-            container.setPadding_(new Insets(all));
+            node.setPadding_(new Insets(all));
             return this;
         }
 
+        @Override
         public InnerModifier marginTop(double margin) {
-            HBox.setMargin(container, new Insets(margin, 0, 0, 0));
-
+            HBox.setMargin(node, new Insets(margin, 0, 0, 0));
             return this;
         }
 
+        @Override
         public InnerModifier padding(double top, double right, double bottom, double left) {
-            container.setPadding(new Insets(top, right, bottom, left));
+            node.setPadding(new Insets(top, right, bottom, left));
             return this;
         }
 
-        public InnerModifier fillMaxHeigth(boolean b) {
+        @Override
+        public InnerModifier fillMaxHeight(boolean b) {
             if (b) {
-                container.setMaxHeight(Double.MAX_VALUE);
-                VBox.setVgrow(container, Priority.ALWAYS);
+                node.setMaxHeight(Double.MAX_VALUE);
+                VBox.setVgrow(node, Priority.ALWAYS);
             } else {
-                container.setMaxHeight(Region.USE_COMPUTED_SIZE);
-                VBox.setVgrow(container, Priority.NEVER);
+                node.setMaxHeight(Region.USE_COMPUTED_SIZE);
+                VBox.setVgrow(node, Priority.NEVER);
             }
             return this;
         }
 
+        @Override
         public InnerModifier fillMaxWidth(boolean b) {
             if (b) {
-                container.setMaxWidth(Double.MAX_VALUE);
+                node.setMaxWidth(Double.MAX_VALUE);
             } else {
-                container.setMaxWidth(Region.USE_COMPUTED_SIZE);
+                node.setMaxWidth(Region.USE_COMPUTED_SIZE);
             }
             return this;
         }
 
+        @Override
         public InnerModifier maxHeight(double maxHeight) {
-            container.setMaxHeight(maxHeight);
+            node.setMaxHeight(maxHeight);
             return this;
         }
 
+        @Override
         public InnerModifier maxWidth(double maxWidth) {
-            container.setMaxWidth(maxWidth);
+            node.setMaxWidth(maxWidth);
             return this;
         }
 
-        public InnerModifier width(int width) {
-            container.setPrefWidth(width);
-            container.setMinWidth(width);
-            container.setMaxWidth(width);
-            HBox.setHgrow(container, Priority.NEVER); // <-- não deixar expandir
+        @Override
+        public InnerModifier width(double width) {
+            node.setPrefWidth(width);
+            node.setMinWidth(width);
+            node.setMaxWidth(width);
+            HBox.setHgrow(node, Priority.NEVER); // <-- não deixar expandir
             return this;
         }
 
+        @Override
         public InnerModifier height(double height) {
-            container.setPrefHeight(height);
+            node.setPrefHeight(height);
             return this;
         }
 
@@ -179,27 +191,34 @@ public class Row_ extends HBox implements DeclarativeContracts<Row_.InnerModifie
             return new InnerStyles(this);
         }
 
-        public static class InnerStyles {
-            private final InnerModifier mod;
+        public static class InnerStyles extends LayoutStyles<Row_> {
 
             public InnerStyles(InnerModifier modifier) {
-                this.mod = modifier;
+                super(modifier);
             }
 
+            @Override
             public InnerStyles bgColor(Color color) {
-                mod.container.setBackground(new Background(
+                modifier.getNode().setBackground(new Background(
                         new BackgroundFill(color, null, null)));
                 return this;
             }
 
-            public InnerStyles border(int radiusAll) {
-                mod.container.setBorder(new Border(
+            @Override
+            public InnerStyles borderRadius(int radiusAll) {
+                modifier.getNode().setBorder(new Border(
                         new BorderStroke(
                                 null, // Color - você pode definir uma cor aqui (ex: Color.BLACK)
                                 BorderStrokeStyle.SOLID, // Estilo da borda
                                 new CornerRadii(radiusAll), // Raio dos cantos
                                 new BorderWidths(1) // Largura da borda (1 pixel por padrão)
                         )));
+                return this;
+            }
+
+            @Override
+            public InnerStyles borderColor(Paint color) {
+                // Implementação específica para Row_ se necessário
                 return this;
             }
         }

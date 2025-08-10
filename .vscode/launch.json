@@ -3,6 +3,14 @@
   "configurations": [
     {
       "type": "java",
+      "name": "LayoutRefactoringExample",
+      "request": "launch",
+      "mainClass": "toolkit.theme.LayoutRefactoringExample",
+      "projectName": "my_app",
+      "vmArgs": "--module-path ./.java_fx/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics -Dprism.order=sw -Dprism.verbose=true"
+    },
+    {
+      "type": "java",
       "name": "RefactoringExample",
       "request": "launch",
       "mainClass": "toolkit.theme.RefactoringExample",

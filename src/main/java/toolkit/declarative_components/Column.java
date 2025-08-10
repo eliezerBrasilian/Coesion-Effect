@@ -23,6 +23,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import toolkit.declarative_components.modifiers.LayoutModifier;
+import toolkit.declarative_components.modifiers.LayoutStyles;
 
 public class Column extends VBox implements DeclarativeContracts<Column.InnerModifier> {
 
@@ -227,46 +229,56 @@ public class Column extends VBox implements DeclarativeContracts<Column.InnerMod
         return new InnerModifier(this);
     }
 
-    public static class InnerModifier {
-        private final Column vbox;
+    public static class InnerModifier extends LayoutModifier<Column> {
 
         public InnerModifier(Column vbox) {
-            this.vbox = vbox;
+            super(vbox);
         }
 
+        @Override
         public InnerModifier alignment(Pos alignment) {
-            vbox.setAlignment_(alignment);
+            node.setAlignment_(alignment);
             return this;
         }
 
+        @Override
         public InnerModifier spacing(double spacing) {
-            vbox.setSpacing_(spacing);
+            node.setSpacing_(spacing);
             return this;
         }
 
+        @Override
         public InnerModifier padding(double all) {
-            vbox.setPadding_(new Insets(all));
+            node.setPadding_(new Insets(all));
             return this;
         }
 
+        @Override
         public InnerModifier padding(double top, double right, double bottom, double left) {
-            vbox.setPadding(new Insets(top, right, bottom, left));
+            node.setPadding(new Insets(top, right, bottom, left));
             return this;
         }
 
+        @Override
+        public InnerModifier marginTop(double margin) {
+            // Implementação específica para Column se necessário
+            return this;
+        }
+
+        @Override
         public InnerModifier fillMaxHeight(boolean enable) {
             if (enable) {
-                vbox.setMaxHeight(Double.MAX_VALUE);
-                VBox.setVgrow(vbox, Priority.ALWAYS);
+                node.setMaxHeight(Double.MAX_VALUE);
+                VBox.setVgrow(node, Priority.ALWAYS);
 
                 // Aplica aos filhos já existentes
-                for (Node child : vbox.getChildren()) {
+                for (Node child : node.getChildren()) {
                     VBox.setVgrow(child, Priority.ALWAYS);
                     child.maxHeight(Double.MAX_VALUE);
                 }
 
                 // Observa novos filhos
-                vbox.getChildren().addListener((ListChangeListener<Node>) change -> {
+                node.getChildren().addListener((ListChangeListener<Node>) change -> {
                     while (change.next()) {
                         if (change.wasAdded()) {
                             for (Node addedChild : change.getAddedSubList()) {
@@ -278,25 +290,26 @@ public class Column extends VBox implements DeclarativeContracts<Column.InnerMod
                 });
 
             } else {
-                vbox.setMaxHeight(Region.USE_PREF_SIZE);
-                VBox.setVgrow(vbox, Priority.NEVER);
+                node.setMaxHeight(Region.USE_PREF_SIZE);
+                VBox.setVgrow(node, Priority.NEVER);
             }
 
             return this;
         }
 
+        @Override
         public InnerModifier fillMaxWidth(boolean enable) {
-            vbox.setFillWidth(enable);
+            node.setFillWidth(enable);
 
             if (enable) {
                 // Aplica aos filhos já existentes
-                for (Node child : vbox.getChildren()) {
+                for (Node child : node.getChildren()) {
                     VBox.setVgrow(child, Priority.ALWAYS);
                     child.maxWidth(Double.MAX_VALUE);
                 }
 
                 // Observa novos filhos
-                vbox.getChildren().addListener((ListChangeListener<Node>) change -> {
+                node.getChildren().addListener((ListChangeListener<Node>) change -> {
                     while (change.next()) {
                         if (change.wasAdded()) {
                             for (Node addedChild : change.getAddedSubList()) {
@@ -311,27 +324,31 @@ public class Column extends VBox implements DeclarativeContracts<Column.InnerMod
             return this;
         }
 
+        @Override
         public InnerModifier maxHeight(double maxHeight) {
-            vbox.setMaxHeight(maxHeight);
+            node.setMaxHeight(maxHeight);
             return this;
         }
 
+        @Override
         public InnerModifier maxWidth(double maxWidth) {
-            vbox.setMaxWidth(maxWidth);
+            node.setMaxWidth(maxWidth);
             return this;
         }
 
+        @Override
         public InnerModifier height(double height) {
-            vbox.setHeight(height);
-            vbox.setPrefHeight(height);
-            vbox.setMaxHeight(height);
+            node.setHeight(height);
+            node.setPrefHeight(height);
+            node.setMaxHeight(height);
             return this;
         }
 
+        @Override
         public InnerModifier width(double width) {
-            vbox.setWidth(width);
-            vbox.setPrefWidth(width);
-            vbox.setMaxWidth(width);
+            node.setWidth(width);
+            node.setPrefWidth(width);
+            node.setMaxWidth(width);
             return this;
         }
 
@@ -339,31 +356,32 @@ public class Column extends VBox implements DeclarativeContracts<Column.InnerMod
             return new InnerStyles(this);
         }
 
-        public static class InnerStyles {
-            private final InnerModifier modifier;
+        public static class InnerStyles extends LayoutStyles<Column> {
             private CornerRadii cornerRadii = CornerRadii.EMPTY; // Armazena o raio dos cantos
             private Paint borderColor = null;
 
             public InnerStyles(InnerModifier modifier) {
-                this.modifier = modifier;
+                super(modifier);
             }
 
+            @Override
             public InnerStyles bgColor(Color color) {
-                modifier.vbox.setBackground(new Background(
+                modifier.getNode().setBackground(new Background(
                         new BackgroundFill(color,
                                 cornerRadii, null)));
                 return this;
             }
 
+            @Override
             public InnerStyles borderRadius(int radiusAll) {
                 this.cornerRadii = new CornerRadii(radiusAll);
 
                 // Reaplica o background com cantos arredondados
-                BackgroundFill currentFill = modifier.vbox.getBackground() != null
-                        ? modifier.vbox.getBackground().getFills().get(0)
+                BackgroundFill currentFill = modifier.getNode().getBackground() != null
+                        ? modifier.getNode().getBackground().getFills().get(0)
                         : new BackgroundFill(Color.TRANSPARENT, cornerRadii, null);
 
-                modifier.vbox.setBackground(new Background(
+                modifier.getNode().setBackground(new Background(
                         new BackgroundFill(
                                 currentFill.getFill(),
                                 cornerRadii,
@@ -371,24 +389,25 @@ public class Column extends VBox implements DeclarativeContracts<Column.InnerMod
 
                 // Atualiza a borda usando a cor definida, se existir
                 if (borderColor != null) {
-                    modifier.vbox.setBorder(new Border(
+                    modifier.getNode().setBorder(new Border(
                             new BorderStroke(
                                     borderColor,
                                     BorderStrokeStyle.SOLID,
                                     cornerRadii,
                                     new BorderWidths(1))));
                 } else {
-                    modifier.vbox.setBorder(Border.EMPTY);
+                    modifier.getNode().setBorder(Border.EMPTY);
                 }
 
                 return this;
             }
 
+            @Override
             public InnerStyles borderColor(Paint color) {
                 this.borderColor = color;
 
                 // Aplica a borda imediatamente caso já tenha um radius definido
-                modifier.vbox.setBorder(new Border(
+                modifier.getNode().setBorder(new Border(
                         new BorderStroke(
                                 borderColor,
                                 BorderStrokeStyle.SOLID,
