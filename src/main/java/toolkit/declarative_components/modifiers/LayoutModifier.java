@@ -1,9 +1,6 @@
 package toolkit.declarative_components.modifiers;
 
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 
 /**
  * Classe abstrata para modificar componentes de layout (Row_ e Column)
