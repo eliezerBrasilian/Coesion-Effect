@@ -3,8 +3,10 @@ package toolkit.declarative_components;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -26,7 +28,7 @@ import javafx.scene.paint.Paint;
 import toolkit.declarative_components.modifiers.LayoutModifier;
 import toolkit.declarative_components.modifiers.LayoutStyles;
 
-public class Column extends VBox implements DeclarativeContracts<Column.InnerModifier> {
+public class Column extends VBox implements DeclarativeContracts<BaseContainer> {
 
     public Column() {
         super();
@@ -78,6 +80,78 @@ public class Column extends VBox implements DeclarativeContracts<Column.InnerMod
         VBox.setVgrow(this, Priority.NEVER);
     }
 
+    public <T> RenderIfHandler<T> renderIf(
+            ObservableValue<T> observable,
+            Predicate<T> predicate,
+            Supplier<Node> nodeSupplier) {
+
+        RenderIfHandler<T> handler = new RenderIfHandler<>(observable, predicate, nodeSupplier);
+        handler.init();
+        return handler;
+    }
+
+    public RenderIfHandler<Boolean> renderIf(
+            ObservableValue<Boolean> observable,
+            Supplier<Node> nodeSupplier) {
+        return renderIf(observable, b -> b != null && b, nodeSupplier);
+    }
+
+    public static class RenderIfHandler<T> {
+        private final ObservableValue<T> observable;
+        private final Predicate<T> predicate;
+
+        private Node onTrueNode;
+        private Supplier<Node> onTrueSupplier;
+
+        private Node onFalseNode;
+        private Supplier<Node> onFalseSupplier;
+
+        public RenderIfHandler(ObservableValue<T> observable, Predicate<T> predicate,
+                Supplier<Node> onTrueSupplier) {
+            this.observable = observable;
+            this.predicate = predicate;
+            this.onTrueSupplier = onTrueSupplier;
+        }
+
+        public void init() {
+            onTrueNode = onTrueSupplier.get();
+            onTrueNode.setVisible(false);
+            onTrueNode.setManaged(false);
+
+            if (onFalseSupplier != null) {
+                onFalseNode = onFalseSupplier.get();
+                onFalseNode.setVisible(false);
+                onFalseNode.setManaged(false);
+            }
+
+            update(observable.getValue());
+            observable.addListener((obs, oldVal, newVal) -> update(newVal));
+        }
+
+        private void update(T value) {
+            boolean showTrue = predicate.test(value);
+            if (onTrueNode != null) {
+                onTrueNode.setVisible(showTrue);
+                onTrueNode.setManaged(showTrue);
+            }
+            if (onFalseNode != null) {
+                onFalseNode.setVisible(!showTrue);
+                onFalseNode.setManaged(!showTrue);
+            }
+        }
+
+        public RenderIfHandler<T> otherwise(Supplier<Node> onFalseSupplier) {
+            this.onFalseSupplier = onFalseSupplier;
+            if (onTrueNode != null && onFalseNode == null) {
+                onFalseNode = onFalseSupplier.get();
+                onFalseNode.setVisible(false);
+                onFalseNode.setManaged(false);
+                update(observable.getValue());
+            }
+            return this;
+        }
+    }
+
     @Override
     public void mountEffect(Runnable effect, ObservableValue<?>... dependencies) {
         effect.run();
@@ -113,33 +187,6 @@ public class Column extends VBox implements DeclarativeContracts<Column.InnerMod
         items.addListener((ListChangeListener<T>) change -> renderList.run());
     }
 
-    public void when(ObservableValue<Boolean> condition, Supplier<Node> builder) {
-        Node[] nodeRef = new Node[1]; // para guardar o nó criado
-
-        // Listener que reage ao valor
-        condition.addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                if (nodeRef[0] == null) {
-                    Node node = builder.get();
-                    nodeRef[0] = node;
-                    getChildren().add(node);
-                }
-            } else {
-                if (nodeRef[0] != null) {
-                    getChildren().remove(nodeRef[0]);
-                    nodeRef[0] = null;
-                }
-            }
-        });
-
-        // estado inicial
-        if (condition.getValue()) {
-            Node node = builder.get();
-            nodeRef[0] = node;
-            getChildren().add(node);
-        }
-    }
-
     public void setSpacing_(double spacing) {
         super.setSpacing(spacing);
         requestLayout();
@@ -154,66 +201,6 @@ public class Column extends VBox implements DeclarativeContracts<Column.InnerMod
         super.setAlignment(alignment);
         requestLayout();
     }
-
-    // @Override
-    // protected void layoutChildren() {
-    // double contentWidth = getWidth() - padding.getLeft() - padding.getRight();
-    // double contentHeight = getHeight() - padding.getTop() - padding.getBottom();
-
-    // // Altura total dos filhos
-    // double totalHeight = 0;
-    // for (Node child : getChildren()) {
-    // totalHeight += child.prefHeight(-1);
-    // }
-    // totalHeight += (getChildren().size() - 1) * spacing;
-
-    // // Offset inicial vertical
-    // double yOffset;
-    // if (alignment == Pos.BOTTOM_CENTER || alignment == Pos.BOTTOM_LEFT ||
-    // alignment == Pos.BOTTOM_RIGHT) {
-    // yOffset = contentHeight - totalHeight;
-    // } else if (alignment == Pos.CENTER || alignment == Pos.CENTER_LEFT ||
-    // alignment == Pos.CENTER_RIGHT) {
-    // yOffset = (contentHeight - totalHeight) / 2;
-    // } else {
-    // yOffset = 0;
-    // }
-    // yOffset += padding.getTop();
-
-    // // Layout de cada filho
-    // for (Node child : getChildren()) {
-    // double childWidth;
-    // // Respeita fillMaxWidth (maxWidth == Double.MAX_VALUE)
-    // if (child.maxWidth(Double.MAX_VALUE) == Double.MAX_VALUE) {
-    // childWidth = contentWidth;
-    // } else {
-    // childWidth = Math.min(contentWidth, child.prefWidth(-1));
-    // }
-
-    // double childHeight = child.prefHeight(-1);
-
-    // Insets margin = VBox.getMargin(child);
-    // double topMargin = (margin != null) ? margin.getTop() : 0;
-
-    // double xOffset;
-    // if (childWidth == contentWidth) {
-    // // Preenche toda a largura -> começa do padding esquerdo
-    // xOffset = padding.getLeft();
-    // } else if (alignment == Pos.TOP_LEFT || alignment == Pos.CENTER_LEFT ||
-    // alignment == Pos.BOTTOM_LEFT) {
-    // xOffset = padding.getLeft();
-    // } else if (alignment == Pos.TOP_RIGHT || alignment == Pos.CENTER_RIGHT ||
-    // alignment == Pos.BOTTOM_RIGHT) {
-    // xOffset = padding.getLeft() + (contentWidth - childWidth);
-    // } else {
-    // xOffset = padding.getLeft() + (contentWidth - childWidth) / 2;
-    // }
-
-    // yOffset += topMargin; // aplica marginTop
-    // child.resizeRelocate(xOffset, yOffset, childWidth, childHeight);
-    // yOffset += childHeight + spacing;
-    // }
-    // }
 
     @Override
     protected double computePrefHeight(double width) {
@@ -231,8 +218,11 @@ public class Column extends VBox implements DeclarativeContracts<Column.InnerMod
 
     public static class InnerModifier extends LayoutModifier<Column> {
 
+        public Column self;
+
         public InnerModifier(Column vbox) {
             super(vbox);
+            self = vbox;
         }
 
         @Override
