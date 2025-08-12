@@ -1,6 +1,8 @@
 package toolkit.declarative_components;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -20,12 +22,15 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import toolkit.declarative_components.DeclarativeContractsHandler.RenderIfHandler;
 import toolkit.declarative_components.modifiers.LayoutModifier;
 import toolkit.declarative_components.modifiers.LayoutStyles;
 
-public class Row_ extends HBox implements DeclarativeContracts<Row_.InnerModifier> {
+public class Row_ extends HBox implements DeclarativeContracts {
 
-    public Row_() {
+    private final DeclarativeContractsHandler<Row_> handler = new DeclarativeContractsHandler<>(this);
+
+    private Row_() {
         super();
         // Não expandir por padrão
         HBox.setHgrow(this, Priority.NEVER);
@@ -223,6 +228,17 @@ public class Row_ extends HBox implements DeclarativeContracts<Row_.InnerModifie
             }
         }
 
+    }
+
+    @Override
+    public <T> RenderIfHandler<T> renderIf(ObservableValue<T> observable, Predicate<T> predicate,
+            Supplier<Node> nodeSupplier) {
+        return handler.renderIf(observable, predicate, nodeSupplier);
+    }
+
+    @Override
+    public RenderIfHandler<Boolean> renderIf(ObservableValue<Boolean> observable, Supplier<Node> nodeSupplier) {
+        return handler.renderIf(observable, nodeSupplier);
     }
 
 }

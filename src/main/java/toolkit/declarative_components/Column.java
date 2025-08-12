@@ -25,33 +25,19 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import toolkit.declarative_components.DeclarativeContractsHandler.RenderIfHandler;
 import toolkit.declarative_components.modifiers.LayoutModifier;
 import toolkit.declarative_components.modifiers.LayoutStyles;
 
-public class Column extends VBox implements DeclarativeContracts<BaseContainer> {
+public class Column extends VBox implements DeclarativeContracts {
 
-    public Column() {
-        super();
+    private final DeclarativeContractsHandler<Column> handler = new DeclarativeContractsHandler<>(this);
 
-        setMinHeight(Region.USE_PREF_SIZE);
-        setPrefHeight(Region.USE_COMPUTED_SIZE);
-
-        // 🔑 Importante: impedir crescimento automático
-        setMaxHeight(Region.USE_PREF_SIZE);
-        VBox.setVgrow(this, Priority.NEVER);
+    private Column() {
     }
 
     public Column(Runnable content) {
-        FXNodeContext.add(this); // <---- Adiciona esta Column ao contexto pai
-        FXNodeContext.push(this); // Agora, ela é o contexto para seus próprios filhos
-        content.run();
-        FXNodeContext.pop();
-        setMinHeight(Region.USE_PREF_SIZE);
-        setPrefHeight(Region.USE_COMPUTED_SIZE);
-
-        // 🔑 Importante: impedir crescimento automático
-        setMaxHeight(Region.USE_PREF_SIZE);
-        VBox.setVgrow(this, Priority.NEVER);
+        init(content);
     }
 
     public Column(Consumer<InnerModifier> content) {
@@ -80,86 +66,37 @@ public class Column extends VBox implements DeclarativeContracts<BaseContainer> 
         VBox.setVgrow(this, Priority.NEVER);
     }
 
+    private void init(Runnable content) {
+        FXNodeContext.add(this);
+        FXNodeContext.push(this);
+        content.run();
+        FXNodeContext.pop();
+
+        setMinHeight(Region.USE_PREF_SIZE);
+        setPrefHeight(Region.USE_COMPUTED_SIZE);
+        setMaxHeight(Region.USE_PREF_SIZE);
+        VBox.setVgrow(this, Priority.NEVER);
+    }
+
+    @Override
     public <T> RenderIfHandler<T> renderIf(
             ObservableValue<T> observable,
             Predicate<T> predicate,
             Supplier<Node> nodeSupplier) {
 
-        RenderIfHandler<T> handler = new RenderIfHandler<>(observable, predicate, nodeSupplier);
-        handler.init();
-        return handler;
+        return handler.renderIf(observable, predicate, nodeSupplier);
     }
 
+    @Override
     public RenderIfHandler<Boolean> renderIf(
             ObservableValue<Boolean> observable,
             Supplier<Node> nodeSupplier) {
-        return renderIf(observable, b -> b != null && b, nodeSupplier);
-    }
-
-    public static class RenderIfHandler<T> {
-        private final ObservableValue<T> observable;
-        private final Predicate<T> predicate;
-
-        private Node onTrueNode;
-        private Supplier<Node> onTrueSupplier;
-
-        private Node onFalseNode;
-        private Supplier<Node> onFalseSupplier;
-
-        public RenderIfHandler(ObservableValue<T> observable, Predicate<T> predicate,
-                Supplier<Node> onTrueSupplier) {
-            this.observable = observable;
-            this.predicate = predicate;
-            this.onTrueSupplier = onTrueSupplier;
-        }
-
-        public void init() {
-            onTrueNode = onTrueSupplier.get();
-            onTrueNode.setVisible(false);
-            onTrueNode.setManaged(false);
-
-            if (onFalseSupplier != null) {
-                onFalseNode = onFalseSupplier.get();
-                onFalseNode.setVisible(false);
-                onFalseNode.setManaged(false);
-            }
-
-            update(observable.getValue());
-            observable.addListener((obs, oldVal, newVal) -> update(newVal));
-        }
-
-        private void update(T value) {
-            boolean showTrue = predicate.test(value);
-            if (onTrueNode != null) {
-                onTrueNode.setVisible(showTrue);
-                onTrueNode.setManaged(showTrue);
-            }
-            if (onFalseNode != null) {
-                onFalseNode.setVisible(!showTrue);
-                onFalseNode.setManaged(!showTrue);
-            }
-        }
-
-        public RenderIfHandler<T> otherwise(Supplier<Node> onFalseSupplier) {
-            this.onFalseSupplier = onFalseSupplier;
-            if (onTrueNode != null && onFalseNode == null) {
-                onFalseNode = onFalseSupplier.get();
-                onFalseNode.setVisible(false);
-                onFalseNode.setManaged(false);
-                update(observable.getValue());
-            }
-            return this;
-        }
+        return handler.renderIf(observable, nodeSupplier);
     }
 
     @Override
     public void mountEffect(Runnable effect, ObservableValue<?>... dependencies) {
-        effect.run();
-
-        if (dependencies != null)
-            for (ObservableValue<?> dep : dependencies) {
-                dep.addListener((obs, oldVal, newVal) -> effect.run());
-            }
+        handler.mountEffect(effect, dependencies);
     }
 
     public <T> void each(ObservableList<T> items, Function<T, Node> builder, Supplier<Node> renderIfEmpty) {

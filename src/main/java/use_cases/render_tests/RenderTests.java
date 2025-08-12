@@ -22,11 +22,9 @@ public class RenderTests extends Application {
         @Override
         public void start(Stage primaryStage) throws Exception {
 
-                Column root = new Column((modifier) -> {
+                Column root = new Column((self, modifier) -> {
 
                         modifier.styles().bgColor(Color.BROWN);
-
-                        var self = modifier.self;
 
                         self.renderIf(visible, () -> new Column(() -> {
                                 new Text_("Ola mundo");
