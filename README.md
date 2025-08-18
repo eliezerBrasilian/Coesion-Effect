@@ -28,7 +28,6 @@ There are two ways to initialize your own project:
 
 Then extract the archive and open the folder in your preferred IDE like VS Code. You're now ready to dive in!
 
-[Coesion Effect comunnity on Telegram](https://t.me/coesion_effect)
 
 ## Building your App
 
@@ -36,15 +35,9 @@ Then extract the archive and open the folder in your preferred IDE like VS Code.
 mvn clean package
 ```
 
-Or you can use Cryxie Cli directly
-
-```bash
-cryxie build --mvn
-```
-
 ## Distributing Your App
 
-After you have builded it you can distribute easily on two ways
+After you have builded it you can distribute easily
 
 Enter manually into scripts folder and run create-installer.bat
 
@@ -63,15 +56,9 @@ After that, your app will be generated in the `dist` folder:
 
 ## Testing Your App Programatically
 
-In order to test your app, you have two options.
+In order to test your app, you need.
 
-1. Run the folloywing command with cryxie-cli
-
-```bash
-cryxie test-javafx-app --windows
-```
-
-2. Or you can enter manually into scripts folder and run test-app.bat
+Enter manually into scripts folder and run test-app.bat
 
 ```bash
 cd scripts
