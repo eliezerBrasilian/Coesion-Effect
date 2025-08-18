@@ -46,7 +46,7 @@ cryxie build --mvn
 
 After you have builded it you can distribute easily on two ways
 
-1. Enter manually into scripts folder and run create-installer.bat
+Enter manually into scripts folder and run create-installer.bat
 
 ```bash
 cd scripts
@@ -54,12 +54,6 @@ cd scripts
 
 ```bash
 .\create-installer.bat
-```
-
-2. Or you can do with cryxie-cli
-
-```bash
-cryxie dist-javafx-app --windows
 ```
 
 After that, your app will be generated in the `dist` folder:
