@@ -6,7 +6,7 @@ This tutorial will guide you through setting up your desktop application with ev
 If this project has been helpful or inspiring, consider making a donation to help it grow.
 
 As a thank you, your name will be proudly listed in the README.
-[Donate now](buymeacoffee.com/plantfall)
+[Donate now](https://buymeacoffee.com/plantfall)
 
 ## Getting the Application
 
