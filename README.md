@@ -2,6 +2,12 @@
 
 This tutorial will guide you through setting up your desktop application with everything ready to go.
 
+## 💖 Support the project and get featured as a contributor!
+If this project has been helpful or inspiring, consider making a donation to help it grow.
+
+As a thank you, your name will be proudly listed in the README.
+[Donate now](buymeacoffee.com/plantfall)
+
 ## Getting the Application
 
 Here you going to see the ways you can use to initialize your own project.
